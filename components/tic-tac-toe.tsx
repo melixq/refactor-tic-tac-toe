@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { BOARD_COLUMNS, BOARD_SIZE } from "@/lib/game-constants"
 import {
@@ -22,10 +22,17 @@ interface GameState {
 export default function TicTacToe() {
   const [gameState, setGameState] = useState<GameState>(() => ({
     board: Array(BOARD_SIZE).fill(null),
-    currentPlayer: randomizePlayer(),
+    currentPlayer: "X",
     winner: null,
     gameOver: false,
   }))
+
+  useEffect(() => {
+    setGameState((prev) => ({
+      ...prev,
+      currentPlayer: randomizePlayer(),
+    }))
+  }, [])
 
   // Handle square click
   const handleSquareClick = (index: number) => {
