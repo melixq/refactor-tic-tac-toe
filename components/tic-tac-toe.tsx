@@ -13,9 +13,13 @@ interface GameState {
 }
 
 export default function TicTacToe() {
+const randomizePlayer = () => {
+    return Math.random() < 0.5 ? "X" : "O";
+  }
+
 const [gameState, setGameState] = useState<GameState>({
     board: Array(9).fill(null),
-    currentPlayer: "X",
+    currentPlayer: randomizePlayer(),
     winner: null,
     gameOver: false,
   })
@@ -64,7 +68,7 @@ const [gameState, setGameState] = useState<GameState>({
   const handleReset = () => {
     setGameState({
       board: Array(9).fill(null),
-      currentPlayer: "X",
+      currentPlayer: randomizePlayer(),
       winner: null,
       gameOver: false,
     })
