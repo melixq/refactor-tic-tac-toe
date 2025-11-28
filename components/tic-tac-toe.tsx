@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
+import { WINNING_LINES, BOARD_COLUMNS, BOARD_SIZE } from '@/lib/game-constants';
 
 type Player = "X" | "O" | null
 
@@ -18,7 +19,7 @@ const randomizePlayer = () => {
   }
 
 const [gameState, setGameState] = useState<GameState>({
-    board: Array(9).fill(null),
+    board: Array(BOARD_SIZE).fill(null),
     currentPlayer: randomizePlayer(),
     winner: null,
     gameOver: false,
@@ -26,19 +27,8 @@ const [gameState, setGameState] = useState<GameState>({
 
   // Calculate winner
   const calculateWinner = (squares: Player[]): Player => {
-    const lines = [
-      [0, 1, 2],
-      [3, 4, 5],
-      [6, 7, 8],
-      [0, 3, 6],
-      [1, 4, 7],
-      [2, 5, 8],
-      [0, 4, 8],
-      [2, 4, 6],
-    ]
-
-    for (let i = 0; i < lines.length; i++) {
-      const [a, b, c] = lines[i]
+    for (let i = 0; i < WINNING_LINES.length; i++) {
+      const [a, b, c] = WINNING_LINES[i]
       if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
         return squares[a]
       }
@@ -67,7 +57,7 @@ const [gameState, setGameState] = useState<GameState>({
   // Reset game
   const handleReset = () => {
     setGameState({
-      board: Array(9).fill(null),
+      board: Array(BOARD_SIZE).fill(null),
       currentPlayer: randomizePlayer(),
       winner: null,
       gameOver: false,
@@ -99,7 +89,7 @@ const [gameState, setGameState] = useState<GameState>({
         </div>
 
         {/* Game Board */}
-        <div className="grid grid-cols-3 gap-3 mb-8">
+        <div className={`grid grid-cols-${BOARD_COLUMNS} gap-3 mb-8`}>
           {gameState.board.map((value, index) => (
             <button
               key={index}
