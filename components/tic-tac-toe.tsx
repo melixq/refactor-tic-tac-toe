@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
-import { BOARD_COLUMNS, BOARD_SIZE } from "@/lib/game-constants"
+import { BOARD_COLUMNS, BOARD_SIZE, PLAYER_COLORS } from "@/lib/game-constants"
 import {
   calculateWinner,
   isBoardFull,
@@ -62,6 +62,12 @@ export default function TicTacToe() {
     })
   }
 
+  // Coloring for Players
+  const getSquareClasses = (value: Player) => {
+      if (!value) return "bg-secondary hover:bg-primary hover:text-primary-foreground"
+      return `${PLAYER_COLORS[value].bg} ${PLAYER_COLORS[value].text}`
+    }
+
   return (
     <div className="space-y-8">
       <div className="text-center space-y-2">
@@ -83,7 +89,9 @@ export default function TicTacToe() {
             <button
               key={index}
               onClick={() => handleSquareClick(index)}
-              className="aspect-square bg-secondary hover:bg-primary hover:text-primary-foreground text-foreground border-2 border-border rounded-lg font-bold text-3xl transition-all duration-200 hover:scale-105 active:scale-95 cursor-pointer"
+              className={`aspect-square ${getSquareClasses(value)} 
+              border-2 border-border rounded-lg font-bold text-3xl 
+              transition-all duration-200 hover:scale-105 active:scale-95 cursor-pointer`}
               disabled={gameState.gameOver && !value}
             >
               {value}
