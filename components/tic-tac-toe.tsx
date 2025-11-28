@@ -2,9 +2,15 @@
 
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
-import { WINNING_LINES, BOARD_COLUMNS, BOARD_SIZE } from '@/lib/game-constants';
-
-type Player = "X" | "O" | null
+import { BOARD_COLUMNS, BOARD_SIZE } from "@/lib/game-constants"
+import {
+  calculateWinner,
+  isBoardFull,
+  getNextPlayer,
+  getStatusMessage,
+  randomizePlayer,
+  type Player,
+} from "@/lib/game-utils"
 
 interface GameState {
   board: Player[]
@@ -14,27 +20,12 @@ interface GameState {
 }
 
 export default function TicTacToe() {
-const randomizePlayer = () => {
-    return Math.random() < 0.5 ? "X" : "O";
-  }
-
-const [gameState, setGameState] = useState<GameState>({
+  const [gameState, setGameState] = useState<GameState>(() => ({
     board: Array(BOARD_SIZE).fill(null),
     currentPlayer: randomizePlayer(),
     winner: null,
     gameOver: false,
-  })
-
-  // Calculate winner
-  const calculateWinner = (squares: Player[]): Player => {
-    for (let i = 0; i < WINNING_LINES.length; i++) {
-      const [a, b, c] = WINNING_LINES[i]
-      if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-        return squares[a]
-      }
-    }
-    return null
-  }
+  }))
 
   // Handle square click
   const handleSquareClick = (index: number) => {
@@ -44,13 +35,13 @@ const [gameState, setGameState] = useState<GameState>({
     newBoard[index] = gameState.currentPlayer
 
     const winner = calculateWinner(newBoard)
-    const isBoardFull = newBoard.every((square) => square !== null)
+    const isFull = isBoardFull(newBoard)
 
     setGameState({
       board: newBoard,
-      currentPlayer: gameState.currentPlayer === "X" ? "O" : "X",
+      currentPlayer: getNextPlayer(gameState.currentPlayer),
       winner,
-      gameOver: !!winner || isBoardFull,
+      gameOver: !!winner || isFull,
     })
   }
 
@@ -64,17 +55,6 @@ const [gameState, setGameState] = useState<GameState>({
     })
   }
 
-  // Determine status message
-  const getStatusMessage = () => {
-    if (gameState.winner) {
-      return `🎉 Player ${gameState.winner} Wins!`
-    }
-    if (gameState.gameOver) {
-      return "It's a Draw!"
-    }
-    return `Current Player: ${gameState.currentPlayer}`
-  }
-
   return (
     <div className="space-y-8">
       <div className="text-center space-y-2">
@@ -85,7 +65,9 @@ const [gameState, setGameState] = useState<GameState>({
       <div className="bg-card border border-border rounded-lg p-8 shadow-lg">
         {/* Status */}
         <div className="mb-8 text-center">
-          <p className="text-xl font-semibold text-foreground">{getStatusMessage()}</p>
+          <p className="text-xl font-semibold text-foreground">
+            {getStatusMessage(gameState.winner, gameState.gameOver, gameState.currentPlayer)}
+          </p>
         </div>
 
         {/* Game Board */}
