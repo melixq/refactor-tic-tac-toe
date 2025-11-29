@@ -20,7 +20,10 @@ export function Board({ board, gameOver, onSquareClick }: BoardProps) {
     // Причем (вроде бы), если не использовать интерполяцию строк, то всё будет работать ок, но 
     // я всё таки считаю, что такие константы должны быть выделены отдельно, а не существовали как
     // магические числа...
-    <div className={`grid grid-cols-${BOARD_COLUMNS} gap-3`}>
+    //
+    // Как хотел использовать:
+    // <div className={`grid grid-cols-${BOARD_COLUMNS} gap-3`}>
+    <div className="grid grid-cols-3 gap-3">
       {board.map((value, index) => (
         <button
           key={index}
